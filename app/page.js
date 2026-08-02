@@ -25,13 +25,33 @@ const shiftOptions = [
   { id: 'OFF', label: 'OFF', color: 'bg-red-700 text-white' }, // OFF warna merah pekat
 ];
 
+const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbw6C19I-zTrEHzFkIPdJstt6LQ-h-ySflJXaE0ScQzMOipk24RX7p1fL2IuV8K9YQ0v/exec';
+
 export default function ScheduleDashboard() {
   const [schedule, setSchedule] = useState({});
   const [startDate, setStartDate] = useState('');
   const [viewMode, setViewMode] = useState('edit'); 
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [dates, setDates] = useState([]);
   const scheduleRef = useRef(null);
+
+  const fetchData = async (date) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${URL_SCRIPT}?startDate=${date}`);
+      const result = await res.json();
+      if (result && result.schedule) {
+        setSchedule(result.schedule);
+      } else {
+        setSchedule({}); // Kosongkan jika belum ada jadwal
+      }
+    } catch (error) {
+      console.error('Gagal mengambil data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (startDate) {
@@ -48,6 +68,9 @@ export default function ScheduleDashboard() {
         });
       }
       setDates(newDates);
+      
+      // Tarik data otomatis dari Spreadsheet setiap kali tanggal dipilih
+      fetchData(startDate);
     }
   }, [startDate]);
 
@@ -61,8 +84,6 @@ export default function ScheduleDashboard() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbw6C19I-zTrEHzFkIPdJstt6LQ-h-ySflJXaE0ScQzMOipk24RX7p1fL2IuV8K9YQ0v/exec';
-      
       await fetch(URL_SCRIPT, {
         method: 'POST',
         mode: 'no-cors',
@@ -186,7 +207,6 @@ export default function ScheduleDashboard() {
                 className="border-none bg-gray-100 text-sm md:text-base p-1.5 md:p-2 rounded-md focus:ring-2 focus:ring-purple-500 outline-none w-full md:w-48 cursor-pointer"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                disabled={viewMode === 'view'}
               />
             </div>
           </div>
@@ -232,6 +252,11 @@ export default function ScheduleDashboard() {
               <div className="text-center py-12 md:py-16 bg-gray-50 rounded-none md:rounded-xl border-y md:border border-dashed border-gray-300 m-4 md:m-0">
                 <AlertCircle className="w-10 h-10 md:w-12 md:h-12 text-gray-400 mx-auto mb-3" />
                 <p className="text-gray-500 font-medium text-sm md:text-base px-4">Silakan pilih tanggal "Mulai Hari Senin" di atas untuk memunculkan tabel jadwal.</p>
+              </div>
+            ) : isLoading ? (
+              <div className="text-center py-12 md:py-16 bg-white rounded-none md:rounded-xl border-y md:border border-gray-200 m-4 md:m-0 flex flex-col items-center justify-center space-y-4">
+                <Loader2 className="w-12 h-12 text-purple-600 animate-spin" />
+                <p className="text-gray-500 font-bold animate-pulse">Menarik data dari Spreadsheet...</p>
               </div>
             ) : (
               <div className="overflow-x-auto shadow-inner rounded-none md:rounded-xl border-y md:border border-gray-200 relative">
