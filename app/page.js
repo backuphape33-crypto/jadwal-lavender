@@ -8,12 +8,13 @@ const employees = [
   { id: 3, name: 'Siska', department: 'Housekeeping', code: 'HK' },
   { id: 4, name: 'Andre', department: 'Housekeeping', code: 'HK' },
   { id: 5, name: 'Fahmi', department: 'Housekeeping', code: 'HK' },
-  { id: 6, name: 'Salman', department: 'General', code: 'GEN' },
-  { id: 7, name: 'Indah', department: 'Laundry', code: 'LD' },
-  { id: 8, name: 'Tabhita', department: 'Receptionist', code: 'RC' },
-  { id: 9, name: 'Alit', department: 'Receptionist', code: 'RC' },
-  { id: 10, name: 'Billa', department: 'Receptionist', code: 'RC' },
-  { id: 11, name: 'Ady', department: 'Housekeeping', code: 'HK' },
+  { id: 6, name: 'Ady', department: 'Housekeeping', code: 'HK' },
+  { id: 7, name: 'Salman', department: 'General', code: 'GEN' },
+  { id: 8, name: 'Indah', department: 'Laundry', code: 'LD' },
+  { id: 9, name: 'Tabhita', department: 'Receptionist', code: 'RC' },
+  { id: 10, name: 'Alit', department: 'Receptionist', code: 'RC' },
+  { id: 11, name: 'Billa', department: 'Receptionist', code: 'RC' },
+  
 ];
 
 const shiftOptions = [
