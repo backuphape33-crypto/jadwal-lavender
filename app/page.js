@@ -13,6 +13,7 @@ const employees = [
   { id: 8, name: 'Tabhita', department: 'Receptionist', code: 'RC' },
   { id: 9, name: 'Alit', department: 'Receptionist', code: 'RC' },
   { id: 10, name: 'Billa', department: 'Receptionist', code: 'RC' },
+  { id: 11, name: 'Ady', department: 'Housekeeping', code: 'HK' },
 ];
 
 const shiftOptions = [
