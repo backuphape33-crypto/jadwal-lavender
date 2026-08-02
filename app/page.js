@@ -84,13 +84,16 @@ export default function ScheduleDashboard() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      // Menggunakan URLSearchParams agar lolos dari blokir keamanan browser (CORS)
+      const formData = new URLSearchParams();
+      formData.append('data', JSON.stringify({
+        startDate: startDate,
+        schedule: schedule
+      }));
+
       await fetch(URL_SCRIPT, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          startDate: startDate,
-          schedule: schedule
-        })
+        body: formData,
       });
       
       alert('Jadwal berhasil disimpan ke sistem Spreadsheet!');
