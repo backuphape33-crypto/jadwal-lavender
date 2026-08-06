@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Hotel, ShieldCheck, LogOut, Loader2, ArrowLeft, 
