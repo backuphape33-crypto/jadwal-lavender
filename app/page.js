@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
-import { 
+import React, { useState, useEffect, useRef } from 'react';
+import { Hotel, ShieldCheck, LogOut, Loader2, ArrowLeft, CalendarDays, Save, Download, Clock, User } from 'lucide-react';
 
 const employees = [
   { id: 1, name: 'Haikal', department: 'Housekeeping', code: 'HK' },
