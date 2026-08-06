@@ -9,12 +9,18 @@ import {
 
 const employees = {
   'Hotel Lavender': [
-    { id: 1, name: 'Haikal', department: 'Housekeeping', code: 'HK' },
-    { id: 2, name: 'Arif', department: 'Housekeeping', code: 'HK' },
-    { id: 3, name: 'Siska', department: 'Housekeeping', code: 'HK' },
-    { id: 4, name: 'Andre', department: 'Housekeeping', code: 'HK' },
-    { id: 5, name: 'Tabhita', department: 'Receptionist', code: 'RC' },
-  ],
+  { id: 1, name: 'Haikal', department: 'Housekeeping', code: 'HK' },
+  { id: 2, name: 'Arif', department: 'Housekeeping', code: 'HK' },
+  { id: 3, name: 'Siska', department: 'Housekeeping', code: 'HK' },
+  { id: 4, name: 'Andre', department: 'Housekeeping', code: 'HK' },
+  { id: 5, name: 'Fahmi', department: 'Housekeeping', code: 'HK' },
+  { id: 6, name: 'Ady', department: 'Housekeeping', code: 'HK' },
+  { id: 7, name: 'Salman', department: 'General', code: 'GA' },
+  { id: 8, name: 'Indah', department: 'Laundry', code: 'LD' },
+  { id: 9, name: 'Alit', department: 'Receptionist', code: 'FO' },
+  { id: 10, name: 'Billa', department: 'Receptionist', code: 'FO' },
+  { id: 11, name: 'Tabhita', department: 'Receptionist', code: 'FO' }
+],
   'Hotel Harmony': [
     { id: 6, name: 'Budi', department: 'Housekeeping', code: 'HK' },
     { id: 7, name: 'Citra', department: 'Receptionist', code: 'RC' },
@@ -32,10 +38,10 @@ const employees = {
 };
 
 const hotelsList = [
-  { id: 'h1', name: 'Hotel Lavender', location: 'Pusat Kota', empCount: 5 },
-  { id: 'h2', name: 'Hotel Harmony', location: 'Jakarta Selatan', empCount: 3 },
-  { id: 'h3', name: 'Ruma Guesthouse', location: 'Jakarta Barat', empCount: 2 },
-  { id: 'h4', name: 'Hotel Kartika', location: 'Jakarta Utara', empCount: 3 },
+  { id: 'h1', name: 'Hotel Lavender', location: 'Sungai Danau', empCount: 11 },
+  { id: 'h2', name: 'Hotel Harmony', location: 'Batulicin', empCount: 3 },
+  { id: 'h3', name: 'Ruma Guesthouse', location: 'Kotabaru', empCount: 2 },
+  { id: 'h4', name: 'Hotel Kartika', location: 'Kotabaru', empCount: 3 },
 ];
 
 const shiftOptions = [
