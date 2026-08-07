@@ -53,7 +53,7 @@ const shiftOptions = [
 
 const Footer = () => (
   <div className="w-full text-center py-6 text-gray-400 text-[11px] md:text-xs font-medium tracking-wide relative z-20 mt-10">
-    Copyright © 2026. Create by: kenes (kevin yohanes)
+    Copyright © 2026. Created by: kenes (kevin yohanes)
   </div>
 );
 
