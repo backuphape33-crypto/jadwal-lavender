@@ -584,7 +584,11 @@ export default function App() {
     const fetchJadwalFromDatabase = async () => {
       setIsFetching(true);
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getSchedule&hotel=${encodeURIComponent(selectedHotel)}&startDate=${startDate}`);
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'getSchedule', hotel: selectedHotel, startDate: startDate })
+        });
         const data = await response.json();
         
         if (data.status === 'success' && data.schedule) {
@@ -593,7 +597,7 @@ export default function App() {
           setSchedule({});
         }
       } catch (error) {
-        showNotif('Gagal menarik data jadwal', 'error');
+        showNotif('Gagal menarik data jadwal dari server.', 'error');
       } finally {
         setIsFetching(false);
       }
