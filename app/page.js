@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Hotel, ShieldCheck, LogOut, Loader2, ArrowLeft, CalendarDays, Save, Download, Clock, User, CheckCircle2, AlertCircle, Edit3, Eye, ImageIcon, Building2, Check, X, Lock, Users } from 'lucide-react';
 
-// URL SCRIPT GOOGLE MILIKMU
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6C19I-zTrEHzFkIPdJstt6LQ-h-ySflJXaE0ScQzMOipk24RX7p1fL2IuV8K9YQ0v/exec';
 
 const employees = {
@@ -71,7 +70,7 @@ const ToastNotification = ({ msg, type, onClose }) => {
   );
 };
 
-const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelectedHotel, showNotif }) => {
+const AdminDashboard = ({ currentUser, handleLogout, setCurrentView, setSelectedHotel, showNotif }) => {
   const [adminLoading, setAdminLoading] = useState(false);
   const [usersList, setUsersList] = useState([]);
 
@@ -116,10 +115,16 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
     }
   };
 
+  const goToSchedule = (hotelName) => {
+    setSelectedHotel(hotelName);
+    setCurrentView('schedule');
+    localStorage.setItem('msmh_hotel', hotelName);
+    localStorage.setItem('msmh_view', 'schedule');
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header Admin */}
         <div className="bg-gradient-to-r from-gray-900 via-indigo-950 to-indigo-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white space-y-4 md:space-y-0 rounded-[2rem] shadow-xl border border-gray-800">
            <div className="flex items-center space-x-5">
               <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
@@ -131,15 +136,13 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
               </div>
            </div>
            <div className="flex w-full md:w-auto">
-             <button onClick={() => { setCurrentUser(null); setCurrentView('login'); }} className="flex-1 md:flex-none justify-center bg-white/10 hover:bg-white/20 border border-white/10 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center active:scale-95 shadow-sm">
+             <button onClick={handleLogout} className="flex-1 md:flex-none justify-center bg-white/10 hover:bg-white/20 border border-white/10 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center active:scale-95 shadow-sm">
                <LogOut className="w-4 h-4 mr-2"/> Keluar Sistem
              </button>
            </div>
         </div>
 
-        {/* Akses Jadwal Hotel & Manajemen Akun Digabung dalam 1 Layar */}
         <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
-           
            <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
              <h3 className="text-xl font-black text-gray-800 flex items-center"><Building2 className="w-6 h-6 mr-2 text-indigo-500"/> Akses Jadwal Cabang</h3>
              <p className="text-sm text-gray-500 mt-1 md:mt-0 font-medium">Pilih cabang untuk mengatur jadwal shift</p>
@@ -149,7 +152,7 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
             {hotelsList.map(hotel => (
                <div 
                  key={hotel.id} 
-                 onClick={() => { setSelectedHotel(hotel.name); setCurrentView('schedule'); }}
+                 onClick={() => goToSchedule(hotel.name)}
                  className="bg-slate-50 p-5 md:p-6 rounded-3xl border border-gray-200 hover:shadow-xl hover:border-indigo-400 transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
                >
                   <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-5 group-hover:bg-indigo-600 transition-all duration-300 shadow-sm">
@@ -165,7 +168,6 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
             ))}
           </div>
 
-          {/* Tabel Persetujuan Akun di Bawah Hotel */}
           <div className="border-t border-gray-200 pt-10">
             <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center"><Users className="w-6 h-6 mr-2 text-indigo-500"/> Persetujuan & Akun Staf</h3>
             {adminLoading ? (
@@ -229,7 +231,6 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
               </div>
             )}
           </div>
-
         </div>
       </div>
       <Footer />
@@ -237,7 +238,66 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
   );
 };
 
-const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurrentView, showNotif }) => {
+const HotelSelectionDashboard = ({ currentUser, handleLogout, setCurrentView, setSelectedHotel }) => {
+  const goToSchedule = (hotelName) => {
+    setSelectedHotel(hotelName);
+    setCurrentView('schedule');
+    localStorage.setItem('msmh_hotel', hotelName);
+    localStorage.setItem('msmh_view', 'schedule');
+  };
+
+  const goAdmin = () => {
+    setCurrentView('admin');
+    localStorage.setItem('msmh_view', 'admin');
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+       <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 space-y-4 md:space-y-0">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Pilih Cabang Hotel</h2>
+              <p className="text-indigo-600 font-bold text-sm mt-2 bg-indigo-50 border border-indigo-100 inline-flex items-center px-4 py-1.5 rounded-full shadow-sm">
+                <CheckCircle2 className="w-4 h-4 mr-1.5"/> Hak Akses Bebas • {currentUser?.username}
+              </p>
+            </div>
+            <div className="flex space-x-3 w-full md:w-auto">
+              {['admin','manager'].includes(currentUser?.role) && (
+                 <button onClick={goAdmin} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-2xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-[0_4px_15px_rgba(79,70,229,0.3)] active:scale-95">
+                    <ShieldCheck className="w-4 h-4 mr-2"/> Dasbor Admin
+                 </button>
+              )}
+              <button onClick={handleLogout} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-95">
+                <LogOut className="w-4 h-4 mr-2"/> Keluar
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {hotelsList.map(hotel => (
+               <div 
+                 key={hotel.id} 
+                 onClick={() => goToSchedule(hotel.name)}
+                 className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-2xl hover:border-indigo-300 transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
+               >
+                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)]">
+                     <Hotel className="w-8 h-8 text-indigo-600 group-hover:text-white transition-colors" />
+                  </div>
+                  <h3 className="font-black text-2xl text-gray-900 tracking-tight leading-tight mb-2">{hotel.name}</h3>
+                  <p className="text-sm text-gray-500 font-medium mb-6">{hotel.location}</p>
+                  <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-5">
+                     <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
+                     <span className="font-black text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">{hotel.empCount} Org</span>
+                  </div>
+               </div>
+            ))}
+          </div>
+       </div>
+       <Footer />
+    </div>
+  );
+};
+
+const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNotif }) => {
   const [schedule, setSchedule] = useState({});
   const [startDate, setStartDate] = useState('');
   const [viewMode, setViewMode] = useState('edit'); 
@@ -248,7 +308,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
 
   const currentEmployees = employees[selectedHotel] || [];
 
-  // Tarik Jadwal: Mengambil semua jadwal hotel secara asinkron setiap masuk komponen
   const fetchJadwalFromDatabase = async () => {
     setIsFetching(true);
     try {
@@ -261,9 +320,8 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
       
       if (data.status === 'success' && data.schedules) {
         const newScheduleState = {};
-        // Mapping format absolute date agar tahan saat digeser tanggal
         data.schedules.forEach(item => {
-          const dateStr = item.date;
+          const dateStr = item.date; // Sudah tersambung sebagai String Mutlak dari backend
           Object.keys(item.data).forEach(empId => {
             newScheduleState[`${empId}-${dateStr}`] = item.data[empId];
           });
@@ -271,7 +329,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
         setSchedule(newScheduleState);
       }
     } catch (error) {
-      showNotif('Gagal menarik data jadwal dari database', 'error');
+      showNotif('Gagal menarik riwayat jadwal', 'error');
     } finally {
       setIsFetching(false);
     }
@@ -283,7 +341,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
     }
   }, [selectedHotel]);
 
-  // Transformasi Absolute Date saat tanggal dipilih
   useEffect(() => {
     if (startDate) {
       const start = new Date(startDate);
@@ -318,27 +375,34 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
     try {
       const dailyData = {};
       
-      // Bungkus data jadwal berdasarkan tanggal absolutnya untuk disimpan
+      // Filter hanya data yang berisi shift agar tidak mengirim object kosong
       dates.forEach(d => {
-        dailyData[d.fullDate] = {};
+        const dayData = {};
+        let hasData = false;
         currentEmployees.forEach(emp => {
           const shiftValue = schedule[`${emp.id}-${d.fullDate}`];
           if (shiftValue) {
-            dailyData[d.fullDate][emp.id] = shiftValue;
+            dayData[emp.id] = shiftValue;
+            hasData = true;
           }
         });
+        if (hasData) {
+          dailyData[d.fullDate] = dayData;
+        }
       });
+
+      if(Object.keys(dailyData).length === 0) {
+         showNotif('Tidak ada jadwal baru untuk disimpan!', 'error');
+         setIsSaving(false);
+         return;
+      }
 
       await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ 
-          action: 'saveSchedule', 
-          hotel: selectedHotel, 
-          dailyData: dailyData 
-        })
+        body: JSON.stringify({ action: 'saveSchedule', hotel: selectedHotel, dailyData: dailyData })
       });
-      showNotif('Jadwal berhasil disimpan secara absolut!', 'success');
+      showNotif('Jadwal berhasil disimpan/diperbarui secara absolut!', 'success');
     } catch (error) {
       showNotif('Gagal menyimpan jadwal.', 'error');
     } finally {
@@ -401,23 +465,27 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
     return shift ? shift.color : 'bg-white';
   };
 
+  const goBack = () => {
+     if(['admin', 'manager'].includes(currentUser?.role)) {
+         setCurrentView('admin');
+         localStorage.setItem('msmh_view', 'admin');
+     }
+     else if(currentUser?.accessType === 'bebas') {
+         setCurrentView('hotelSelection');
+         localStorage.setItem('msmh_view', 'hotelSelection');
+     }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-2 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-gray-100">
-        
-        {/* Header Biru Jadwal */}
         <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4 w-full md:w-auto">
-            <button 
-              onClick={() => {
-                 if(['admin', 'manager'].includes(currentUser?.role)) setCurrentView('admin');
-                 else if(currentUser?.accessType === 'bebas') setCurrentView('hotelSelection');
-                 else { setCurrentUser(null); setCurrentView('login'); }
-              }}
-              className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-colors text-white backdrop-blur-sm border border-white/10 shadow-sm"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
+            {currentUser?.role !== 'user' && (
+                <button onClick={goBack} className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-colors text-white backdrop-blur-sm border border-white/10 shadow-sm">
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+            )}
             <div className="flex items-center space-x-3 text-white">
               <div className="bg-white/10 p-2 rounded-xl backdrop-blur-sm hidden md:block border border-white/10">
                 <CalendarDays className="w-7 h-7 text-blue-200" />
@@ -438,7 +506,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
           </div>
         </div>
 
-        {/* Action Bar (Bisa Edit Tanggal di semua mode) */}
         <div id="export-buttons" className="p-4 md:p-6 bg-slate-50 border-b border-gray-200 flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
           <div className="flex items-center space-x-4 bg-white p-3 md:p-4 rounded-2xl shadow-sm border border-gray-200 w-full lg:w-auto relative">
             <div className="bg-indigo-50 p-2.5 rounded-xl">
@@ -446,7 +513,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
             </div>
             <div className="w-full flex flex-col pr-8">
               <label className="block text-[10px] md:text-xs font-black text-gray-500 mb-1 uppercase tracking-wider">Pilih Tanggal Mulai:</label>
-              {/* Input selalu terbuka untuk diganti agar bisa mencari riwayat di mode lihat */}
               <input 
                 type="date" 
                 className="border-none bg-transparent text-sm md:text-base p-0 focus:ring-0 outline-none w-full md:w-48 cursor-pointer font-bold text-gray-800"
@@ -473,7 +539,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
           </div>
         </div>
 
-        {/* Area Render Tabel */}
         <div ref={scheduleRef} className="bg-white">
           <div className="p-0 md:p-6">
             {!startDate ? (
@@ -481,7 +546,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
                 <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm border border-gray-100 transform rotate-3">
                    <AlertCircle className="w-10 h-10 text-gray-400" />
                 </div>
-                <p className="text-gray-500 font-bold text-sm md:text-base px-4">Pilih tanggal mulai di atas untuk memuat jadwal yang sudah tersimpan atau membuat baru.</p>
+                <p className="text-gray-500 font-bold text-sm md:text-base px-4">Pilih tanggal mulai di atas untuk memuat jadwal riwayat atau membuat baru.</p>
               </div>
             ) : (
               <div className="overflow-x-auto shadow-sm md:rounded-2xl border-y md:border border-gray-200">
@@ -513,7 +578,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
                             </div>
                           </div>
                         </td>
-                        {/* Render berdasarkan Tanggal Absolut */}
                         {dates.map((d, dayIdx) => (
                           <td key={dayIdx} className="p-2 md:p-3 border-r border-gray-100 text-center bg-white align-middle">
                             {viewMode === 'edit' ? (
@@ -573,51 +637,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
   );
 };
 
-const HotelSelectionDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelectedHotel }) => (
-  <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-     <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 space-y-4 md:space-y-0">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Pilih Cabang Hotel</h2>
-            <p className="text-indigo-600 font-bold text-sm mt-2 bg-indigo-50 border border-indigo-100 inline-flex items-center px-4 py-1.5 rounded-full shadow-sm">
-              <CheckCircle2 className="w-4 h-4 mr-1.5"/> Hak Akses Bebas • {currentUser?.username}
-            </p>
-          </div>
-          <div className="flex space-x-3 w-full md:w-auto">
-            {['admin','manager'].includes(currentUser?.role) && (
-               <button onClick={() => setCurrentView('admin')} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-2xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-[0_4px_15px_rgba(79,70,229,0.3)] active:scale-95">
-                  <ShieldCheck className="w-4 h-4 mr-2"/> Dasbor Admin
-               </button>
-            )}
-            <button onClick={() => { setCurrentUser(null); setCurrentView('login'); }} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-95">
-              <LogOut className="w-4 h-4 mr-2"/> Keluar
-            </button>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {hotelsList.map(hotel => (
-             <div 
-               key={hotel.id} 
-               onClick={() => { setSelectedHotel(hotel.name); setCurrentView('schedule'); }}
-               className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-2xl hover:border-indigo-300 transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
-             >
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)]">
-                   <Hotel className="w-8 h-8 text-indigo-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-black text-2xl text-gray-900 tracking-tight leading-tight mb-2">{hotel.name}</h3>
-                <p className="text-sm text-gray-500 font-medium mb-6">{hotel.location}</p>
-                <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-5">
-                   <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
-                   <span className="font-black text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">{hotel.empCount} Org</span>
-                </div>
-             </div>
-          ))}
-        </div>
-     </div>
-     <Footer />
-  </div>
-);
-
 export default function App() {
   const [currentView, setCurrentView] = useState('login'); 
   const [currentUser, setCurrentUser] = useState(null);
@@ -631,6 +650,25 @@ export default function App() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [notif, setNotif] = useState({ msg: '', type: '' });
+  const [isAppLoaded, setIsAppLoaded] = useState(false);
+
+  // Membaca sesi LocalStorage saat aplikasi pertama kali dimuat
+  useEffect(() => {
+    const savedUser = localStorage.getItem('msmh_user');
+    const savedView = localStorage.getItem('msmh_view');
+    const savedHotel = localStorage.getItem('msmh_hotel');
+
+    if (savedUser) {
+      try {
+        setCurrentUser(JSON.parse(savedUser));
+        setCurrentView(savedView || 'admin');
+        if (savedHotel) setSelectedHotel(savedHotel);
+      } catch (e) {
+        localStorage.clear();
+      }
+    }
+    setIsAppLoaded(true);
+  }, []);
 
   const showNotif = (msg, type = 'error') => {
     setNotif({ msg, type });
@@ -654,13 +692,20 @@ export default function App() {
         setUsername('');
         setPassword('');
         
+        // Menyimpan data sesi login ke memori browser
+        localStorage.setItem('msmh_user', JSON.stringify(user));
+        
         if (user.role === 'admin' || user.role === 'manager') {
           setCurrentView('admin');
+          localStorage.setItem('msmh_view', 'admin');
         } else if (user.accessType === 'bebas') {
           setCurrentView('hotelSelection'); 
+          localStorage.setItem('msmh_view', 'hotelSelection');
         } else {
           setSelectedHotel(user.hotel);
           setCurrentView('schedule'); 
+          localStorage.setItem('msmh_hotel', user.hotel);
+          localStorage.setItem('msmh_view', 'schedule');
         }
       } else {
         showNotif(data.message || 'Username atau password salah!', 'error');
@@ -670,6 +715,16 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Fungsi Logout yang membersihkan Sesi Browser
+  const handleLogout = () => {
+    localStorage.removeItem('msmh_user');
+    localStorage.removeItem('msmh_view');
+    localStorage.removeItem('msmh_hotel');
+    setCurrentUser(null);
+    setSelectedHotel('');
+    setCurrentView('login');
   };
 
   const handleRegister = async (e) => {
@@ -708,6 +763,14 @@ export default function App() {
       setIsLoading(false);
     }
   };
+
+  if (!isAppLoaded) {
+     return (
+       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+         <Loader2 className="w-10 h-10 animate-spin text-indigo-500" />
+       </div>
+     );
+  }
 
   return (
     <div className="text-gray-800 antialiased font-sans bg-slate-50 min-h-screen">
@@ -856,7 +919,7 @@ export default function App() {
       {currentView === 'admin' && (
         <AdminDashboard 
           currentUser={currentUser} 
-          setCurrentUser={setCurrentUser} 
+          handleLogout={handleLogout} 
           setCurrentView={setCurrentView} 
           setSelectedHotel={setSelectedHotel} 
           showNotif={showNotif} 
@@ -866,7 +929,7 @@ export default function App() {
       {currentView === 'hotelSelection' && (
         <HotelSelectionDashboard 
           currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
+          handleLogout={handleLogout}
           setCurrentView={setCurrentView}
           setSelectedHotel={setSelectedHotel}
         />
@@ -876,7 +939,6 @@ export default function App() {
         <ScheduleDashboard 
           selectedHotel={selectedHotel} 
           currentUser={currentUser} 
-          setCurrentUser={setCurrentUser} 
           setCurrentView={setCurrentView} 
           showNotif={showNotif} 
         />
