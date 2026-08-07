@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Hotel, ShieldCheck, LogOut, Loader2, ArrowLeft, CalendarDays, Save, Download, Clock, User, CheckCircle2, AlertCircle, Edit3, Eye, ImageIcon, Building2, Check, X, Lock, Users } from 'lucide-react';
 
-// PASTIKAN URL INI BENAR (Sesuai milikmu)
+// URL SCRIPT GOOGLE MILIKMU
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6C19I-zTrEHzFkIPdJstt6LQ-h-ySflJXaE0ScQzMOipk24RX7p1fL2IuV8K9YQ0v/exec';
 
 const employees = {
@@ -53,7 +53,7 @@ const shiftOptions = [
 ];
 
 const Footer = () => (
-  <div className="w-full text-center py-6 text-gray-400 text-[11px] md:text-xs font-medium tracking-wide relative z-20">
+  <div className="w-full text-center py-6 text-gray-400 text-[11px] md:text-xs font-medium tracking-wide relative z-20 mt-10">
     Copyright © 2026. Create by: kenes (kevin yohanes)
   </div>
 );
@@ -61,8 +61,8 @@ const Footer = () => (
 const ToastNotification = ({ msg, type, onClose }) => {
   if (!msg) return null;
   return (
-    <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 animate-bounce">
-      <div className={`flex items-center space-x-3 px-6 py-4 rounded-2xl shadow-2xl border backdrop-blur-md ${type === 'error' ? 'bg-red-50/90 border-red-200 text-red-700' : 'bg-emerald-50/90 border-emerald-200 text-emerald-700'}`}>
+    <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] animate-bounce">
+      <div className={`flex items-center space-x-3 px-6 py-4 rounded-2xl shadow-2xl border backdrop-blur-md ${type === 'error' ? 'bg-red-50/95 border-red-200 text-red-700' : 'bg-emerald-50/95 border-emerald-200 text-emerald-700'}`}>
         {type === 'error' ? <AlertCircle className="w-6 h-6" /> : <CheckCircle2 className="w-6 h-6" />}
         <span className="font-bold">{msg}</span>
         <button onClick={onClose} className="ml-4 p-1 hover:bg-black/10 rounded-full transition"><X className="w-5 h-5"/></button>
@@ -71,10 +71,9 @@ const ToastNotification = ({ msg, type, onClose }) => {
   );
 };
 
-// KOMPONEN DASHBOARD ADMIN
 const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelectedHotel, showNotif }) => {
   const [adminLoading, setAdminLoading] = useState(false);
-  const [usersList, setUsersList] = useState([]); // <-- State ini yang sebelumnya hilang
+  const [usersList, setUsersList] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -120,6 +119,7 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header Admin */}
         <div className="bg-gradient-to-r from-gray-900 via-indigo-950 to-indigo-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white space-y-4 md:space-y-0 rounded-[2rem] shadow-xl border border-gray-800">
            <div className="flex items-center space-x-5">
               <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
@@ -137,13 +137,15 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
            </div>
         </div>
 
+        {/* Akses Jadwal Hotel & Manajemen Akun Digabung dalam 1 Layar */}
         <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
+           
            <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
              <h3 className="text-xl font-black text-gray-800 flex items-center"><Building2 className="w-6 h-6 mr-2 text-indigo-500"/> Akses Jadwal Cabang</h3>
              <p className="text-sm text-gray-500 mt-1 md:mt-0 font-medium">Pilih cabang untuk mengatur jadwal shift</p>
            </div>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
             {hotelsList.map(hotel => (
                <div 
                  key={hotel.id} 
@@ -162,70 +164,72 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
                </div>
             ))}
           </div>
-        </div>
-        
-        <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
-          <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center"><Users className="w-6 h-6 mr-2 text-indigo-500"/> Manajemen Akun Staf</h3>
-          {adminLoading ? (
-             <div className="flex justify-center p-20"><Loader2 className="w-10 h-10 animate-spin text-indigo-500"/></div>
-          ) : (
-            <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50 text-gray-500 text-[11px] uppercase tracking-widest font-black border-b border-gray-200">
-                    <th className="p-5">Username</th>
-                    <th className="p-5">Role</th>
-                    <th className="p-5">Penempatan</th>
-                    <th className="p-5">Hak Akses Sistem</th>
-                    <th className="p-5 text-center">Status Akun</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-sm">
-                  {usersList.map((u) => (
-                    <tr key={u.id} className={`transition-colors ${u.status === 'pending' ? 'bg-yellow-50/50 hover:bg-yellow-50' : 'hover:bg-slate-50'}`}>
-                      <td className="p-5 font-black text-gray-800 text-base flex items-center">
-                        {u.status === 'pending' && <span className="w-2 h-2 rounded-full bg-yellow-400 mr-2 animate-pulse"></span>}
-                        {u.username}
-                      </td>
-                      <td className="p-5">
-                         <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest ${u.role === 'admin' ? 'bg-red-100 text-red-700 border border-red-200' : u.role === 'manager' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-blue-100 text-blue-700 border border-blue-200'}`}>
-                           {u.role}
-                         </span>
-                      </td>
-                      <td className="p-5 text-gray-600 font-bold">{u.hotel}</td>
-                      <td className="p-5">
-                         <select 
-                           className="text-xs border-2 border-gray-200 rounded-xl p-2.5 bg-white outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-gray-700 cursor-pointer shadow-sm transition-all"
-                           value={u.accessType}
-                           onChange={(e) => updateUser(u.id, { accessType: e.target.value })}
-                           disabled={u.role === 'admin'}
-                         >
-                            <option value="terbatas">Terbatas (1 Hotel)</option>
-                            <option value="bebas">Bebas (Semua Hotel)</option>
-                         </select>
-                      </td>
-                      <td className="p-5 flex justify-center space-x-2">
-                         {u.status === 'pending' ? (
-                           <>
-                             <button onClick={() => updateUser(u.id, { status: 'approved' })} className="flex items-center text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-bold transition-all shadow-md transform hover:-translate-y-0.5 active:scale-95">
-                               <Check className="w-4 h-4 mr-1.5" /> Setujui
-                             </button>
-                             <button onClick={() => updateUser(u.id, { status: 'rejected' })} className="flex items-center text-xs bg-white hover:bg-red-50 text-red-600 px-4 py-2.5 rounded-xl font-bold transition-all border border-red-200 active:scale-95 shadow-sm">
-                               <X className="w-4 h-4 mr-1.5" /> Tolak
-                             </button>
-                           </>
-                         ) : (
-                           <span className={`flex items-center justify-center text-xs font-black px-4 py-2.5 rounded-xl shadow-sm w-32 ${u.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-red-50 text-red-600 border border-red-200'}`}>
-                              {u.status === 'approved' ? 'Disetujui' : 'Ditolak'}
-                           </span>
-                         )}
-                      </td>
+
+          {/* Tabel Persetujuan Akun di Bawah Hotel */}
+          <div className="border-t border-gray-200 pt-10">
+            <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center"><Users className="w-6 h-6 mr-2 text-indigo-500"/> Persetujuan & Akun Staf</h3>
+            {adminLoading ? (
+               <div className="flex justify-center p-20"><Loader2 className="w-10 h-10 animate-spin text-indigo-500"/></div>
+            ) : (
+              <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 text-gray-500 text-[11px] uppercase tracking-widest font-black border-b border-gray-200">
+                      <th className="p-5">Username</th>
+                      <th className="p-5">Role</th>
+                      <th className="p-5">Penempatan</th>
+                      <th className="p-5">Hak Akses Sistem</th>
+                      <th className="p-5 text-center">Status Akun</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-sm">
+                    {usersList.map((u) => (
+                      <tr key={u.id} className={`transition-colors ${u.status === 'pending' ? 'bg-yellow-50/50 hover:bg-yellow-50' : 'hover:bg-slate-50'}`}>
+                        <td className="p-5 font-black text-gray-800 text-base flex items-center">
+                          {u.status === 'pending' && <span className="w-2 h-2 rounded-full bg-yellow-400 mr-2 animate-pulse"></span>}
+                          {u.username}
+                        </td>
+                        <td className="p-5">
+                           <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest ${u.role === 'admin' ? 'bg-red-100 text-red-700 border border-red-200' : u.role === 'manager' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-blue-100 text-blue-700 border border-blue-200'}`}>
+                             {u.role}
+                           </span>
+                        </td>
+                        <td className="p-5 text-gray-600 font-bold">{u.hotel}</td>
+                        <td className="p-5">
+                           <select 
+                             className="text-xs border-2 border-gray-200 rounded-xl p-2.5 bg-white outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-gray-700 cursor-pointer shadow-sm transition-all"
+                             value={u.accessType}
+                             onChange={(e) => updateUser(u.id, { accessType: e.target.value })}
+                             disabled={u.role === 'admin'}
+                           >
+                              <option value="terbatas">Terbatas (1 Hotel)</option>
+                              <option value="bebas">Bebas (Semua Hotel)</option>
+                           </select>
+                        </td>
+                        <td className="p-5 flex justify-center space-x-2">
+                           {u.status === 'pending' ? (
+                             <>
+                               <button onClick={() => updateUser(u.id, { status: 'approved' })} className="flex items-center text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-bold transition-all shadow-md transform hover:-translate-y-0.5 active:scale-95">
+                                 <Check className="w-4 h-4 mr-1.5" /> Setujui
+                               </button>
+                               <button onClick={() => updateUser(u.id, { status: 'rejected' })} className="flex items-center text-xs bg-white hover:bg-red-50 text-red-600 px-4 py-2.5 rounded-xl font-bold transition-all border border-red-200 active:scale-95 shadow-sm">
+                                 <X className="w-4 h-4 mr-1.5" /> Tolak
+                               </button>
+                             </>
+                           ) : (
+                             <span className={`flex items-center justify-center text-xs font-black px-4 py-2.5 rounded-xl shadow-sm w-32 ${u.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-red-50 text-red-600 border border-red-200'}`}>
+                                {u.status === 'approved' ? 'Disetujui' : 'Ditolak'}
+                             </span>
+                           )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
       <Footer />
@@ -233,7 +237,6 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
   );
 };
 
-// KOMPONEN JADWAL SHIFT
 const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurrentView, showNotif }) => {
   const [schedule, setSchedule] = useState({});
   const [startDate, setStartDate] = useState('');
@@ -245,58 +248,97 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
 
   const currentEmployees = employees[selectedHotel] || [];
 
-  useEffect(() => {
-    if (startDate) {
-      const start = new Date(startDate);
-      const newDates = [];
-      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-      for (let i = 0; i < 7; i++) {
-        const currentDate = new Date(start);
-        currentDate.setDate(start.getDate() + i);
-        newDates.push({
-          day: days[currentDate.getDay()],
-          date: currentDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })
-        });
-      }
-      setDates(newDates);
-      fetchJadwalFromDatabase();
-    }
-  }, [startDate, selectedHotel]);
-
+  // Tarik Jadwal: Mengambil semua jadwal hotel secara asinkron setiap masuk komponen
   const fetchJadwalFromDatabase = async () => {
     setIsFetching(true);
     try {
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'getSchedule', hotel: selectedHotel, startDate: startDate })
+        body: JSON.stringify({ action: 'getSchedule', hotel: selectedHotel })
       });
       const data = await response.json();
-      if (data.status === 'success' && data.schedule) {
-        setSchedule(data.schedule);
-      } else {
-        setSchedule({});
+      
+      if (data.status === 'success' && data.schedules) {
+        const newScheduleState = {};
+        // Mapping format absolute date agar tahan saat digeser tanggal
+        data.schedules.forEach(item => {
+          const dateStr = item.date;
+          Object.keys(item.data).forEach(empId => {
+            newScheduleState[`${empId}-${dateStr}`] = item.data[empId];
+          });
+        });
+        setSchedule(newScheduleState);
       }
     } catch (error) {
-      showNotif('Gagal menarik data jadwal', 'error');
+      showNotif('Gagal menarik data jadwal dari database', 'error');
     } finally {
       setIsFetching(false);
     }
   };
 
-  const handleShiftChange = (empId, dayIdx, shiftId) => {
-    setSchedule(prev => ({ ...prev, [`${empId}-${dayIdx}`]: shiftId }));
+  useEffect(() => {
+    if (selectedHotel) {
+      fetchJadwalFromDatabase();
+    }
+  }, [selectedHotel]);
+
+  // Transformasi Absolute Date saat tanggal dipilih
+  useEffect(() => {
+    if (startDate) {
+      const start = new Date(startDate);
+      const newDates = [];
+      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      
+      for (let i = 0; i < 7; i++) {
+        const currentDate = new Date(start);
+        currentDate.setDate(start.getDate() + i);
+        
+        const yyyy = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(currentDate.getDate()).padStart(2, '0');
+        const absoluteDate = `${yyyy}-${mm}-${dd}`;
+
+        newDates.push({
+          day: days[currentDate.getDay()],
+          date: currentDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+          fullDate: absoluteDate
+        });
+      }
+      setDates(newDates);
+    }
+  }, [startDate]);
+
+  const handleShiftChange = (empId, dateKey, shiftId) => {
+    setSchedule(prev => ({ ...prev, [`${empId}-${dateKey}`]: shiftId }));
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      const dailyData = {};
+      
+      // Bungkus data jadwal berdasarkan tanggal absolutnya untuk disimpan
+      dates.forEach(d => {
+        dailyData[d.fullDate] = {};
+        currentEmployees.forEach(emp => {
+          const shiftValue = schedule[`${emp.id}-${d.fullDate}`];
+          if (shiftValue) {
+            dailyData[d.fullDate][emp.id] = shiftValue;
+          }
+        });
+      });
+
       await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'saveSchedule', hotel: selectedHotel, startDate: startDate, schedule: schedule })
+        body: JSON.stringify({ 
+          action: 'saveSchedule', 
+          hotel: selectedHotel, 
+          dailyData: dailyData 
+        })
       });
-      showNotif('Jadwal berhasil disimpan!', 'success');
+      showNotif('Jadwal berhasil disimpan secara absolut!', 'success');
     } catch (error) {
       showNotif('Gagal menyimpan jadwal.', 'error');
     } finally {
@@ -352,8 +394,8 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
     }
   };
 
-  const getCellColor = (empId, dayIdx) => {
-    const shiftId = schedule[`${empId}-${dayIdx}`];
+  const getCellColor = (empId, dateKey) => {
+    const shiftId = schedule[`${empId}-${dateKey}`];
     if (!shiftId) return 'bg-white';
     const shift = shiftOptions.find(s => s.id === shiftId);
     return shift ? shift.color : 'bg-white';
@@ -362,6 +404,8 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
   return (
     <div className="min-h-screen bg-slate-50 p-2 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-gray-100">
+        
+        {/* Header Biru Jadwal */}
         <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4 w-full md:w-auto">
             <button 
@@ -394,19 +438,20 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
           </div>
         </div>
 
+        {/* Action Bar (Bisa Edit Tanggal di semua mode) */}
         <div id="export-buttons" className="p-4 md:p-6 bg-slate-50 border-b border-gray-200 flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
           <div className="flex items-center space-x-4 bg-white p-3 md:p-4 rounded-2xl shadow-sm border border-gray-200 w-full lg:w-auto relative">
             <div className="bg-indigo-50 p-2.5 rounded-xl">
               <Clock className="text-indigo-600 w-5 h-5" />
             </div>
             <div className="w-full flex flex-col pr-8">
-              <label className="block text-[10px] md:text-xs font-black text-gray-500 mb-1 uppercase tracking-wider">Mulai Hari Senin:</label>
+              <label className="block text-[10px] md:text-xs font-black text-gray-500 mb-1 uppercase tracking-wider">Pilih Tanggal Mulai:</label>
+              {/* Input selalu terbuka untuk diganti agar bisa mencari riwayat di mode lihat */}
               <input 
                 type="date" 
                 className="border-none bg-transparent text-sm md:text-base p-0 focus:ring-0 outline-none w-full md:w-48 cursor-pointer font-bold text-gray-800"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                disabled={viewMode === 'view'}
               />
             </div>
             {isFetching && <Loader2 className="absolute right-4 w-5 h-5 text-indigo-500 animate-spin" />}
@@ -428,6 +473,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
           </div>
         </div>
 
+        {/* Area Render Tabel */}
         <div ref={scheduleRef} className="bg-white">
           <div className="p-0 md:p-6">
             {!startDate ? (
@@ -435,7 +481,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
                 <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm border border-gray-100 transform rotate-3">
                    <AlertCircle className="w-10 h-10 text-gray-400" />
                 </div>
-                <p className="text-gray-500 font-bold text-sm md:text-base px-4">Pilih tanggal "Mulai Hari Senin" untuk memuat jadwal.</p>
+                <p className="text-gray-500 font-bold text-sm md:text-base px-4">Pilih tanggal mulai di atas untuk memuat jadwal yang sudah tersimpan atau membuat baru.</p>
               </div>
             ) : (
               <div className="overflow-x-auto shadow-sm md:rounded-2xl border-y md:border border-gray-200">
@@ -467,21 +513,22 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
                             </div>
                           </div>
                         </td>
-                        {dates.map((_, dayIdx) => (
+                        {/* Render berdasarkan Tanggal Absolut */}
+                        {dates.map((d, dayIdx) => (
                           <td key={dayIdx} className="p-2 md:p-3 border-r border-gray-100 text-center bg-white align-middle">
                             {viewMode === 'edit' ? (
                               <select
-                                className={`w-full appearance-none text-[11px] font-bold py-2.5 pl-3 pr-6 rounded-lg cursor-pointer outline-none transition-all shadow-sm border ${schedule[`${emp.id}-${dayIdx}`] ? getCellColor(emp.id, dayIdx) + ' border-transparent' : 'bg-slate-50 text-gray-500 border-gray-200 hover:border-indigo-300 focus:ring-2 focus:ring-indigo-200'}`}
-                                value={schedule[`${emp.id}-${dayIdx}`] || ''}
-                                onChange={(e) => handleShiftChange(emp.id, dayIdx, e.target.value)}
+                                className={`w-full appearance-none text-[11px] font-bold py-2.5 pl-3 pr-6 rounded-lg cursor-pointer outline-none transition-all shadow-sm border ${schedule[`${emp.id}-${d.fullDate}`] ? getCellColor(emp.id, d.fullDate) + ' border-transparent' : 'bg-slate-50 text-gray-500 border-gray-200 hover:border-indigo-300 focus:ring-2 focus:ring-indigo-200'}`}
+                                value={schedule[`${emp.id}-${d.fullDate}`] || ''}
+                                onChange={(e) => handleShiftChange(emp.id, d.fullDate, e.target.value)}
                               >
                                 <option value="" className="text-gray-400 bg-white font-medium">- Kosong -</option>
                                 {shiftOptions.map(opt => <option key={opt.id} value={opt.id} className="text-gray-800 bg-white font-bold">{opt.id}</option>)}
                               </select>
                             ) : (
                               <div className="flex justify-center items-center h-full">
-                                 <div className={`inline-flex justify-center items-center text-[11px] font-bold py-2 px-3 rounded-lg min-w-[70px] shadow-sm ${schedule[`${emp.id}-${dayIdx}`] ? getCellColor(emp.id, dayIdx) : 'bg-slate-50 text-gray-400 border border-gray-200'}`}>
-                                    {schedule[`${emp.id}-${dayIdx}`] || '-'}
+                                 <div className={`inline-flex justify-center items-center text-[11px] font-bold py-2 px-3 rounded-lg min-w-[70px] shadow-sm ${schedule[`${emp.id}-${d.fullDate}`] ? getCellColor(emp.id, d.fullDate) : 'bg-slate-50 text-gray-400 border border-gray-200'}`}>
+                                    {schedule[`${emp.id}-${d.fullDate}`] || '-'}
                                  </div>
                               </div>
                             )}
@@ -526,7 +573,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
   );
 };
 
-// KOMPONEN PEMILIHAN HOTEL
 const HotelSelectionDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelectedHotel }) => (
   <div className="min-h-screen bg-slate-50 p-4 md:p-8">
      <div className="max-w-5xl mx-auto">
@@ -572,7 +618,6 @@ const HotelSelectionDashboard = ({ currentUser, setCurrentUser, setCurrentView, 
   </div>
 );
 
-// KOMPONEN UTAMA (APP)
 export default function App() {
   const [currentView, setCurrentView] = useState('login'); 
   const [currentUser, setCurrentUser] = useState(null);
