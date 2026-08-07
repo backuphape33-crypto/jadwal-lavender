@@ -246,58 +246,57 @@ const HotelSelectionDashboard = ({ currentUser, handleLogout, setCurrentView, se
     localStorage.setItem('msmh_view', 'schedule');
   };
 
-  const goAdmin = () => {
-    setCurrentView('admin');
-    localStorage.setItem('msmh_view', 'admin');
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-       <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 space-y-4 md:space-y-0">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Pilih Cabang Hotel</h2>
-              <p className="text-indigo-600 font-bold text-sm mt-2 bg-indigo-50 border border-indigo-100 inline-flex items-center px-4 py-1.5 rounded-full shadow-sm">
-                <CheckCircle2 className="w-4 h-4 mr-1.5"/> Hak Akses Bebas • {currentUser?.username}
-              </p>
-            </div>
-            <div className="flex space-x-3 w-full md:w-auto">
-              {['admin','manager'].includes(currentUser?.role) && (
-                 <button onClick={goAdmin} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-2xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-[0_4px_15px_rgba(79,70,229,0.3)] active:scale-95">
-                    <ShieldCheck className="w-4 h-4 mr-2"/> Dasbor Admin
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-gradient-to-r from-gray-900 via-indigo-950 to-indigo-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white space-y-4 md:space-y-0 rounded-[2rem] shadow-xl border border-gray-800">
+           <div className="flex items-center space-x-5">
+              <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
+                 <Building2 className="w-8 h-8 text-indigo-300" />
+              </div>
+              <div>
+                 <h2 className="text-2xl md:text-3xl font-black tracking-tight">Pilih Cabang</h2>
+                 <p className="text-xs md:text-sm text-gray-300 flex items-center mt-1">Sistem Manajemen Terpadu • <span className="font-bold text-emerald-400 ml-1 uppercase">{currentUser?.username}</span></p>
+              </div>
+           </div>
+           <div className="flex w-full md:w-auto space-x-3">
+             {currentUser?.role === 'manager' && (
+                 <button onClick={() => { setCurrentView('admin'); localStorage.setItem('msmh_view', 'admin'); }} className="flex-1 md:flex-none justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center active:scale-95 shadow-sm">
+                   <ShieldCheck className="w-4 h-4 mr-2"/> Admin Dashboard
                  </button>
-              )}
-              <button onClick={handleLogout} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-95">
-                <LogOut className="w-4 h-4 mr-2"/> Keluar
-              </button>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {hotelsList.map(hotel => (
-               <div 
-                 key={hotel.id} 
-                 onClick={() => goToSchedule(hotel.name)}
-                 className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-2xl hover:border-indigo-300 transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
-               >
-                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)]">
-                     <Hotel className="w-8 h-8 text-indigo-600 group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="font-black text-2xl text-gray-900 tracking-tight leading-tight mb-2">{hotel.name}</h3>
-                  <p className="text-sm text-gray-500 font-medium mb-6">{hotel.location}</p>
-                  <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-5">
-                     <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
-                     <span className="font-black text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">{hotel.empCount} Org</span>
-                  </div>
-               </div>
-            ))}
-          </div>
-       </div>
-       <Footer />
+             )}
+             <button onClick={handleLogout} className="flex-1 md:flex-none justify-center bg-white/10 hover:bg-white/20 border border-white/10 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center active:scale-95 shadow-sm">
+               <LogOut className="w-4 h-4 mr-2"/> Keluar Sistem
+             </button>
+           </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {hotelsList.map(hotel => (
+             <div
+               key={hotel.id}
+               onClick={() => goToSchedule(hotel.name)}
+               className="bg-white p-5 md:p-6 rounded-3xl border border-gray-200 hover:shadow-xl hover:border-indigo-400 transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
+             >
+                <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-indigo-600 transition-all duration-300 shadow-sm">
+                   <Hotel className="w-7 h-7 text-indigo-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-black text-xl text-gray-900 tracking-tight leading-tight mb-1">{hotel.name}</h3>
+                <p className="text-xs text-gray-500 font-medium mb-4">{hotel.location}</p>
+                <div className="flex justify-between items-center text-xs border-t border-gray-100 pt-4">
+                   <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
+                   <span className="font-black text-indigo-700 bg-indigo-100/50 px-2.5 py-1 rounded-md border border-indigo-200/50">{hotel.empCount} Org</span>
+                </div>
+             </div>
+          ))}
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 };
 
-const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNotif }) => {
+const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNotif, handleLogout }) => {
   const [schedule, setSchedule] = useState({});
   const [startDate, setStartDate] = useState('');
   const [viewMode, setViewMode] = useState('edit'); 
@@ -321,7 +320,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNot
       if (data.status === 'success' && data.schedules) {
         const newScheduleState = {};
         data.schedules.forEach(item => {
-          const dateStr = item.date; // Sudah tersambung sebagai String Mutlak dari backend
+          const dateStr = item.date; // Format mutlak 'YYYY-MM-DD'
           Object.keys(item.data).forEach(empId => {
             newScheduleState[`${empId}-${dateStr}`] = item.data[empId];
           });
@@ -476,13 +475,15 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNot
      }
   };
 
+  const canGoBack = ['admin', 'manager'].includes(currentUser?.role) || currentUser?.accessType === 'bebas';
+
   return (
     <div className="min-h-screen bg-slate-50 p-2 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-gray-100">
         <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4 w-full md:w-auto">
-            {currentUser?.role !== 'user' && (
-                <button onClick={goBack} className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-colors text-white backdrop-blur-sm border border-white/10 shadow-sm">
+            {canGoBack && (
+                <button onClick={goBack} className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-colors text-white backdrop-blur-sm border border-white/10 shadow-sm" title="Kembali">
                   <ArrowLeft className="w-5 h-5" />
                 </button>
             )}
@@ -503,6 +504,11 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNot
             <button onClick={() => setViewMode('view')} className={`flex-1 md:flex-none flex justify-center items-center space-x-2 px-4 py-2.5 rounded-lg transition-all text-xs md:text-sm ${viewMode === 'view' ? 'bg-white text-indigo-900 font-bold shadow-md scale-100' : 'text-white hover:bg-white/20 font-medium'}`}>
               <Eye className="w-4 h-4" /> <span>Mode Lihat</span>
             </button>
+            {!canGoBack && (
+              <button onClick={handleLogout} className="flex-1 md:flex-none flex justify-center items-center space-x-2 px-4 py-2.5 rounded-lg transition-all text-xs md:text-sm text-red-200 hover:bg-red-500/30 hover:text-white font-medium" title="Keluar dari Sistem">
+                <LogOut className="w-4 h-4" /> <span>Keluar</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -652,7 +658,7 @@ export default function App() {
   const [notif, setNotif] = useState({ msg: '', type: '' });
   const [isAppLoaded, setIsAppLoaded] = useState(false);
 
-  // Membaca sesi LocalStorage saat aplikasi pertama kali dimuat
+  // Load Session from LocalStorage
   useEffect(() => {
     const savedUser = localStorage.getItem('msmh_user');
     const savedView = localStorage.getItem('msmh_view');
@@ -692,7 +698,6 @@ export default function App() {
         setUsername('');
         setPassword('');
         
-        // Menyimpan data sesi login ke memori browser
         localStorage.setItem('msmh_user', JSON.stringify(user));
         
         if (user.role === 'admin' || user.role === 'manager') {
@@ -717,7 +722,6 @@ export default function App() {
     }
   };
 
-  // Fungsi Logout yang membersihkan Sesi Browser
   const handleLogout = () => {
     localStorage.removeItem('msmh_user');
     localStorage.removeItem('msmh_view');
@@ -941,6 +945,7 @@ export default function App() {
           currentUser={currentUser} 
           setCurrentView={setCurrentView} 
           showNotif={showNotif} 
+          handleLogout={handleLogout}
         />
       )}
     </div>
