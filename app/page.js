@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Hotel, ShieldCheck, LogOut, Loader2, ArrowLeft, CalendarDays, Save, Download, Clock, User, CheckCircle2, AlertCircle, Edit3, Eye, ImageIcon, Building2, Check, X, Lock, Users } from 'lucide-react';
 
+// PASTIKAN URL INI BENAR (Sesuai milikmu)
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6C19I-zTrEHzFkIPdJstt6LQ-h-ySflJXaE0ScQzMOipk24RX7p1fL2IuV8K9YQ0v/exec';
 
 const employees = {
@@ -70,9 +71,10 @@ const ToastNotification = ({ msg, type, onClose }) => {
   );
 };
 
+// KOMPONEN DASHBOARD ADMIN
 const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelectedHotel, showNotif }) => {
   const [adminLoading, setAdminLoading] = useState(false);
-  const [usersList, setUsersList] = useState([]); // Dipindahkan ke dalam komponen ini
+  const [usersList, setUsersList] = useState([]); // <-- State ini yang sebelumnya hilang
 
   useEffect(() => {
     fetchUsers();
@@ -118,8 +120,6 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header Admin */}
         <div className="bg-gradient-to-r from-gray-900 via-indigo-950 to-indigo-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white space-y-4 md:space-y-0 rounded-[2rem] shadow-xl border border-gray-800">
            <div className="flex items-center space-x-5">
               <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
@@ -137,7 +137,6 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
            </div>
         </div>
 
-        {/* Akses Cepat Cabang Hotel */}
         <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
            <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
              <h3 className="text-xl font-black text-gray-800 flex items-center"><Building2 className="w-6 h-6 mr-2 text-indigo-500"/> Akses Jadwal Cabang</h3>
@@ -165,7 +164,6 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
           </div>
         </div>
         
-        {/* Tabel Persetujuan Akun */}
         <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
           <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center"><Users className="w-6 h-6 mr-2 text-indigo-500"/> Manajemen Akun Staf</h3>
           {adminLoading ? (
@@ -235,6 +233,7 @@ const AdminDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelect
   );
 };
 
+// KOMPONEN JADWAL SHIFT
 const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurrentView, showNotif }) => {
   const [schedule, setSchedule] = useState({});
   const [startDate, setStartDate] = useState('');
@@ -251,7 +250,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
       const start = new Date(startDate);
       const newDates = [];
       const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-      
       for (let i = 0; i < 7; i++) {
         const currentDate = new Date(start);
         currentDate.setDate(start.getDate() + i);
@@ -274,14 +272,13 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
         body: JSON.stringify({ action: 'getSchedule', hotel: selectedHotel, startDate: startDate })
       });
       const data = await response.json();
-      
       if (data.status === 'success' && data.schedule) {
         setSchedule(data.schedule);
       } else {
         setSchedule({});
       }
     } catch (error) {
-      showNotif('Gagal menarik data jadwal dari server.', 'error');
+      showNotif('Gagal menarik data jadwal', 'error');
     } finally {
       setIsFetching(false);
     }
@@ -299,7 +296,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'saveSchedule', hotel: selectedHotel, startDate: startDate, schedule: schedule })
       });
-      showNotif('Jadwal berhasil disimpan/diperbarui ke Database!', 'success');
+      showNotif('Jadwal berhasil disimpan!', 'success');
     } catch (error) {
       showNotif('Gagal menyimpan jadwal.', 'error');
     } finally {
@@ -314,7 +311,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
       const exportButtons = document.getElementById('export-buttons');
       if (actionButtons) actionButtons.style.display = 'none';
       if (exportButtons) exportButtons.style.display = 'none';
-
       await new Promise(resolve => setTimeout(resolve, 100));
 
       if (typeof window !== 'undefined' && !window.htmlToImage) {
@@ -336,7 +332,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
       link.download = `Jadwal_${selectedHotel}_${startDate || 'Tabel'}.${format}`;
       link.href = dataUrl;
       link.click();
-
     } catch (error) {
       showNotif('Gagal mengekspor gambar.', 'error');
     } finally {
@@ -367,7 +362,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
   return (
     <div className="min-h-screen bg-slate-50 p-2 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-gray-100">
-        
         <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4 w-full md:w-auto">
             <button 
@@ -390,7 +384,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
               </div>
             </div>
           </div>
-
           <div id="action-buttons" className="flex w-full md:w-auto items-center space-x-2 bg-black/20 p-1.5 rounded-xl backdrop-blur-md">
             <button onClick={() => setViewMode('edit')} className={`flex-1 md:flex-none flex justify-center items-center space-x-2 px-4 py-2.5 rounded-lg transition-all text-xs md:text-sm ${viewMode === 'edit' ? 'bg-white text-indigo-900 font-bold shadow-md scale-100' : 'text-white hover:bg-white/20 font-medium'}`}>
               <Edit3 className="w-4 h-4" /> <span>Edit Jadwal</span>
@@ -401,7 +394,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
           </div>
         </div>
 
-        {/* Bagian Input Tanggal & Tombol Cetak */}
         <div id="export-buttons" className="p-4 md:p-6 bg-slate-50 border-b border-gray-200 flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
           <div className="flex items-center space-x-4 bg-white p-3 md:p-4 rounded-2xl shadow-sm border border-gray-200 w-full lg:w-auto relative">
             <div className="bg-indigo-50 p-2.5 rounded-xl">
@@ -427,7 +419,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
                  <span>{isSaving ? 'Menyimpan...' : 'Simpan Database'}</span>
                </button>
             )}
-            
             <button onClick={() => window.print()} className="flex justify-center items-center space-x-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-3 rounded-xl text-xs md:text-sm font-bold transition-all border border-indigo-200 active:scale-95 shadow-sm">
               <Download className="w-4 h-4" /> <span>Cetak</span>
             </button>
@@ -503,8 +494,6 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
               </div>
             )}
           </div>
-          
-          {}
           <div className="bg-slate-50 p-4 md:p-6 border-t border-gray-200">
              <h3 className="font-bold text-gray-800 mb-4 flex items-center text-sm"><CheckCircle2 className="w-5 h-5 mr-2 text-emerald-500"/> Keterangan Shift & Divisi</h3>
              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
@@ -525,6 +514,7 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
                   <div className="text-gray-500 text-[10px] md:text-xs font-bold flex flex-col space-y-1 mt-1">
                     <span>RC1: 07:00 - 15:00</span>
                     <span>RC2: 15:00 - 23:00</span>
+                    <span>RC3: 23:00 - 07:00</span>
                   </div>
                 </div>
              </div>
@@ -536,6 +526,53 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentUser, setCurr
   );
 };
 
+// KOMPONEN PEMILIHAN HOTEL
+const HotelSelectionDashboard = ({ currentUser, setCurrentUser, setCurrentView, setSelectedHotel }) => (
+  <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+     <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 space-y-4 md:space-y-0">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Pilih Cabang Hotel</h2>
+            <p className="text-indigo-600 font-bold text-sm mt-2 bg-indigo-50 border border-indigo-100 inline-flex items-center px-4 py-1.5 rounded-full shadow-sm">
+              <CheckCircle2 className="w-4 h-4 mr-1.5"/> Hak Akses Bebas • {currentUser?.username}
+            </p>
+          </div>
+          <div className="flex space-x-3 w-full md:w-auto">
+            {['admin','manager'].includes(currentUser?.role) && (
+               <button onClick={() => setCurrentView('admin')} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-2xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-[0_4px_15px_rgba(79,70,229,0.3)] active:scale-95">
+                  <ShieldCheck className="w-4 h-4 mr-2"/> Dasbor Admin
+               </button>
+            )}
+            <button onClick={() => { setCurrentUser(null); setCurrentView('login'); }} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-95">
+              <LogOut className="w-4 h-4 mr-2"/> Keluar
+            </button>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {hotelsList.map(hotel => (
+             <div 
+               key={hotel.id} 
+               onClick={() => { setSelectedHotel(hotel.name); setCurrentView('schedule'); }}
+               className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-2xl hover:border-indigo-300 transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
+             >
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)]">
+                   <Hotel className="w-8 h-8 text-indigo-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-black text-2xl text-gray-900 tracking-tight leading-tight mb-2">{hotel.name}</h3>
+                <p className="text-sm text-gray-500 font-medium mb-6">{hotel.location}</p>
+                <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-5">
+                   <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
+                   <span className="font-black text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">{hotel.empCount} Org</span>
+                </div>
+             </div>
+          ))}
+        </div>
+     </div>
+     <Footer />
+  </div>
+);
+
+// KOMPONEN UTAMA (APP)
 export default function App() {
   const [currentView, setCurrentView] = useState('login'); 
   const [currentUser, setCurrentUser] = useState(null);
@@ -627,401 +664,150 @@ export default function App() {
     }
   };
 
-  const renderLogin = () => (
-    <div className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-50">
-      <style>{`
-        @keyframes movingGradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .btn-animated {
-          background: linear-gradient(270deg, #4f46e5, #9333ea, #ec4899, #4f46e5);
-          background-size: 300% 300%;
-          animation: movingGradient 4s ease infinite;
-        }
-        .btn-animated:hover {
-          animation: movingGradient 1.5s ease infinite;
-          box-shadow: 0 0 25px rgba(147, 51, 234, 0.6);
-        }
-        @keyframes blobBounce {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.05); }
-        }
-        .blob {
-          animation: blobBounce 8s infinite ease-in-out;
-        }
-      `}</style>
-
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob"></div>
-      <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob" style={{ animationDelay: '4s' }}></div>
-
-      <div className="relative z-10 max-w-md w-full mx-4 bg-white/70 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] border border-white/60 p-8 md:p-10 transform transition-all">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 mb-3 tracking-tight">
-            Dashboard
-          </h1>
-          <p className="text-xs md:text-sm font-bold text-indigo-700 bg-indigo-50/80 inline-block px-5 py-2 rounded-full uppercase tracking-widest shadow-sm border border-indigo-100">
-            Multi Sistem Manajemen Hotel
-          </p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="relative">
-            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Username</label>
-            <div className="relative flex items-center">
-              <User className="absolute left-4 w-5 h-5 text-gray-400" />
-              <input 
-                type="text" required
-                className="w-full pl-12 pr-4 py-4 bg-white/80 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none text-gray-800 font-medium shadow-sm"
-                value={username} onChange={e => setUsername(e.target.value)}
-                placeholder="Masukkan username..."
-              />
-            </div>
-          </div>
-          
-          <div className="relative">
-            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Password</label>
-            <div className="relative flex items-center">
-              <Lock className="absolute left-4 w-5 h-5 text-gray-400" />
-              <input 
-                type="password" required
-                className="w-full pl-12 pr-4 py-4 bg-white/80 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none text-gray-800 font-medium shadow-sm"
-                value={password} onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-          
-          <button 
-            type="submit" disabled={isLoading}
-            className="btn-animated w-full mt-8 flex justify-center items-center space-x-2 text-white p-4 rounded-2xl font-black text-lg shadow-[0_8px_20px_rgba(79,70,229,0.3)] transform hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed border border-white/20"
-          >
-            {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : <span>Masuk ke Sistem</span>}
-          </button>
-        </form>
-        
-        <div className="mt-10 text-center border-t border-gray-200/50 pt-6">
-          <p className="text-sm text-gray-500 font-medium">Belum memiliki akun staf?</p>
-          <button onClick={() => setCurrentView('register')} className="mt-2 text-indigo-600 font-black hover:text-pink-600 transition-colors uppercase tracking-wide text-sm flex items-center justify-center mx-auto space-x-1">
-            <span>Daftar Akun Baru</span> <ArrowLeft className="w-4 h-4 rotate-180" />
-          </button>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-
-  const renderRegister = () => (
-    <div className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-50">
-      <style>{`
-        @keyframes movingGradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .btn-animated {
-          background: linear-gradient(270deg, #ec4899, #9333ea, #4f46e5, #ec4899);
-          background-size: 300% 300%;
-          animation: movingGradient 4s ease infinite;
-        }
-        .btn-animated:hover {
-          animation: movingGradient 1.5s ease infinite;
-          box-shadow: 0 0 25px rgba(236, 72, 153, 0.6);
-        }
-        .blob {
-          animation: blobBounce 8s infinite ease-in-out;
-        }
-        @keyframes blobBounce {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.05); }
-        }
-      `}</style>
-      
-      <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob"></div>
-      <div className="absolute bottom-[20%] left-[-10%] w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob" style={{ animationDelay: '2s' }}></div>
-
-      <div className="relative z-10 max-w-md w-full mx-4 bg-white/70 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] border border-white/60 p-8 md:p-10">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-pink-600 mb-2">Pendaftaran</h2>
-          <p className="text-xs md:text-sm font-bold text-indigo-700 bg-indigo-50/80 inline-block px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm border border-indigo-100">
-            Multi Sistem Manajemen Hotel
-          </p>
-        </div>
-        
-        <form onSubmit={handleRegister} className="space-y-5">
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Username Baru</label>
-            <div className="relative flex items-center">
-              <User className="absolute left-4 w-5 h-5 text-gray-400" />
-              <input 
-                type="text" required
-                className="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all outline-none text-gray-800 font-medium"
-                value={regUsername} onChange={e => setRegUsername(e.target.value)}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Password</label>
-            <div className="relative flex items-center">
-              <Lock className="absolute left-4 w-5 h-5 text-gray-400" />
-              <input 
-                type="password" required
-                className="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all outline-none text-gray-800 font-medium"
-                value={regPassword} onChange={e => setRegPassword(e.target.value)}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Penempatan Hotel</label>
-            <div className="relative flex items-center">
-              <Building2 className="absolute left-4 w-5 h-5 text-gray-400 pointer-events-none" />
-              <select 
-                className="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all outline-none text-gray-800 font-medium cursor-pointer appearance-none"
-                value={regHotel} onChange={e => setRegHotel(e.target.value)}
-              >
-                {hotelsList.map(h => <option key={h.id} value={h.name}>{h.name}</option>)}
-              </select>
-            </div>
-          </div>
-          
-          <button 
-            type="submit" disabled={isLoading}
-            className="btn-animated w-full mt-6 flex justify-center items-center space-x-2 text-white p-4 rounded-xl font-black shadow-[0_8px_20px_rgba(236,72,153,0.3)] transform hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed border border-white/20"
-          >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <span>Kirim Permintaan Akses</span>}
-          </button>
-        </form>
-        
-        <div className="mt-8 text-center border-t border-gray-200/50 pt-6">
-          <button onClick={() => setCurrentView('login')} className="flex items-center justify-center space-x-1.5 text-sm font-bold text-gray-500 hover:text-indigo-600 mx-auto transition-colors">
-            <ArrowLeft className="w-4 h-4" /> <span>Kembali ke Login</span>
-          </button>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-
-  const AdminDashboard = () => {
-    const [adminLoading, setAdminLoading] = useState(false);
-
-    useEffect(() => {
-      fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
-      setAdminLoading(true);
-      try {
-        // PENTING: Gunakan metode POST sesuai backend Apps Script
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'getUsers' })
-        });
-        const data = await res.json();
-        if(data.status === 'success') {
-          // Urutkan agar status "pending" berada di paling atas
-          const sortedUsers = data.data.sort((a, b) => {
-            if (a.status === 'pending' && b.status !== 'pending') return -1;
-            if (a.status !== 'pending' && b.status === 'pending') return 1;
-            return 0;
-          });
-          setUsersList(sortedUsers);
-        }
-      } catch (err) {
-        showNotif('Gagal mengambil daftar pengguna', 'error');
-      }
-      setAdminLoading(false);
-    };
-
-    const updateUser = async (userId, updateData) => {
-      try {
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'updateUser', userId, updateData })
-        });
-        showNotif('Status user berhasil diupdate!', 'success');
-        fetchUsers(); 
-      } catch (err) {
-        showNotif('Gagal mengupdate user', 'error');
-      }
-    };
-
-    return (
-      <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto space-y-6">
-          
-          {/* Header Admin */}
-          <div className="bg-gradient-to-r from-gray-900 via-indigo-950 to-indigo-900 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white space-y-4 md:space-y-0 rounded-[2rem] shadow-xl border border-gray-800">
-             <div className="flex items-center space-x-5">
-                <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
-                   <ShieldCheck className="w-8 h-8 text-indigo-300" />
-                </div>
-                <div>
-                   <h2 className="text-2xl md:text-3xl font-black tracking-tight">Dashboard Admin</h2>
-                   <p className="text-xs md:text-sm text-gray-300 flex items-center mt-1">Sistem Manajemen Terpadu • <span className="font-bold text-emerald-400 ml-1 uppercase">{currentUser?.username}</span></p>
-                </div>
-             </div>
-             <div className="flex w-full md:w-auto">
-               <button onClick={() => { setCurrentUser(null); setCurrentView('login'); }} className="flex-1 md:flex-none justify-center bg-white/10 hover:bg-white/20 border border-white/10 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all flex items-center active:scale-95 shadow-sm">
-                 <LogOut className="w-4 h-4 mr-2"/> Keluar Sistem
-               </button>
-             </div>
-          </div>
-
-          {/* Akses Cepat Cabang Hotel */}
-          <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
-             <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
-               <h3 className="text-xl font-black text-gray-800 flex items-center"><Building2 className="w-6 h-6 mr-2 text-indigo-500"/> Akses Jadwal Cabang</h3>
-               <p className="text-sm text-gray-500 mt-1 md:mt-0 font-medium">Pilih cabang untuk mengatur jadwal shift</p>
-             </div>
-             
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {hotelsList.map(hotel => (
-                 <div 
-                   key={hotel.id} 
-                   onClick={() => { setSelectedHotel(hotel.name); setCurrentView('schedule'); }}
-                   className="bg-slate-50 p-5 md:p-6 rounded-3xl border border-gray-200 hover:shadow-xl hover:border-indigo-400 transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
-                 >
-                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-5 group-hover:bg-indigo-600 transition-all duration-300 shadow-sm">
-                       <Hotel className="w-7 h-7 text-indigo-600 group-hover:text-white transition-colors" />
-                    </div>
-                    <h3 className="font-black text-xl text-gray-900 tracking-tight leading-tight mb-1">{hotel.name}</h3>
-                    <p className="text-xs text-gray-500 font-medium mb-4">{hotel.location}</p>
-                    <div className="flex justify-between items-center text-xs border-t border-gray-200 pt-4">
-                       <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
-                       <span className="font-black text-indigo-700 bg-indigo-100/50 px-2.5 py-1 rounded-md border border-indigo-200/50">{hotel.empCount} Org</span>
-                    </div>
-                 </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Tabel Persetujuan Akun */}
-          <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
-            <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center"><Users className="w-6 h-6 mr-2 text-indigo-500"/> Manajemen Akun Staf</h3>
-            {adminLoading ? (
-               <div className="flex justify-center p-20"><Loader2 className="w-10 h-10 animate-spin text-indigo-500"/></div>
-            ) : (
-              <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50 text-gray-500 text-[11px] uppercase tracking-widest font-black border-b border-gray-200">
-                      <th className="p-5">Username</th>
-                      <th className="p-5">Role</th>
-                      <th className="p-5">Penempatan</th>
-                      <th className="p-5">Hak Akses Sistem</th>
-                      <th className="p-5 text-center">Status Akun</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 text-sm">
-                    {usersList.map((u) => (
-                      <tr key={u.id} className={`transition-colors ${u.status === 'pending' ? 'bg-yellow-50/50 hover:bg-yellow-50' : 'hover:bg-slate-50'}`}>
-                        <td className="p-5 font-black text-gray-800 text-base flex items-center">
-                          {u.status === 'pending' && <span className="w-2 h-2 rounded-full bg-yellow-400 mr-2 animate-pulse"></span>}
-                          {u.username}
-                        </td>
-                        <td className="p-5">
-                           <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest ${u.role === 'admin' ? 'bg-red-100 text-red-700 border border-red-200' : u.role === 'manager' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-blue-100 text-blue-700 border border-blue-200'}`}>
-                             {u.role}
-                           </span>
-                        </td>
-                        <td className="p-5 text-gray-600 font-bold">{u.hotel}</td>
-                        <td className="p-5">
-                           <select 
-                             className="text-xs border-2 border-gray-200 rounded-xl p-2.5 bg-white outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-gray-700 cursor-pointer shadow-sm transition-all"
-                             value={u.accessType}
-                             onChange={(e) => updateUser(u.id, { accessType: e.target.value })}
-                             disabled={u.role === 'admin'}
-                           >
-                              <option value="terbatas">Terbatas (1 Hotel)</option>
-                              <option value="bebas">Bebas (Semua Hotel)</option>
-                           </select>
-                        </td>
-                        <td className="p-5 flex justify-center space-x-2">
-                           {u.status === 'pending' ? (
-                             <>
-                               <button onClick={() => updateUser(u.id, { status: 'approved' })} className="flex items-center text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-bold transition-all shadow-md transform hover:-translate-y-0.5 active:scale-95">
-                                 <Check className="w-4 h-4 mr-1.5" /> Setujui
-                               </button>
-                               <button onClick={() => updateUser(u.id, { status: 'rejected' })} className="flex items-center text-xs bg-white hover:bg-red-50 text-red-600 px-4 py-2.5 rounded-xl font-bold transition-all border border-red-200 active:scale-95 shadow-sm">
-                                 <X className="w-4 h-4 mr-1.5" /> Tolak
-                               </button>
-                             </>
-                           ) : (
-                             <span className={`flex items-center justify-center text-xs font-black px-4 py-2.5 rounded-xl shadow-sm w-32 ${u.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-red-50 text-red-600 border border-red-200'}`}>
-                                {u.status === 'approved' ? 'Disetujui' : 'Ditolak'}
-                             </span>
-                           )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  };
-
-  const renderHotelSelection = () => (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-       <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 space-y-4 md:space-y-0">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Pilih Cabang Hotel</h2>
-              <p className="text-indigo-600 font-bold text-sm mt-2 bg-indigo-50 border border-indigo-100 inline-flex items-center px-4 py-1.5 rounded-full shadow-sm">
-                <CheckCircle2 className="w-4 h-4 mr-1.5"/> Hak Akses Bebas • {currentUser?.username}
-              </p>
-            </div>
-            <div className="flex space-x-3 w-full md:w-auto">
-              {['admin','manager'].includes(currentUser?.role) && (
-                 <button onClick={() => setCurrentView('admin')} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-2xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-[0_4px_15px_rgba(79,70,229,0.3)] active:scale-95">
-                    <ShieldCheck className="w-4 h-4 mr-2"/> Dasbor Admin
-                 </button>
-              )}
-              <button onClick={() => { setCurrentUser(null); setCurrentView('login'); }} className="flex-1 md:flex-none flex items-center justify-center px-5 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl text-sm font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-95">
-                <LogOut className="w-4 h-4 mr-2"/> Keluar
-              </button>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {hotelsList.map(hotel => (
-               <div 
-                 key={hotel.id} 
-                 onClick={() => { setSelectedHotel(hotel.name); setCurrentView('schedule'); }}
-                 className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-2xl hover:border-indigo-300 transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
-               >
-                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:from-indigo-600 group-hover:to-purple-600 transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)]">
-                     <Hotel className="w-8 h-8 text-indigo-600 group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="font-black text-2xl text-gray-900 tracking-tight leading-tight mb-2">{hotel.name}</h3>
-                  <p className="text-sm text-gray-500 font-medium mb-6">{hotel.location}</p>
-                  <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-5">
-                     <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">Total Tim</span>
-                     <span className="font-black text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">{hotel.empCount} Org</span>
-                  </div>
-               </div>
-            ))}
-          </div>
-       </div>
-       <Footer />
-    </div>
-  );
-
   return (
     <div className="text-gray-800 antialiased font-sans bg-slate-50 min-h-screen">
       <ToastNotification msg={notif.msg} type={notif.type} onClose={() => setNotif({ msg: '', type: '' })} />
       
-      {currentView === 'login' && renderLogin()}
-      {currentView === 'register' && renderRegister()}
+      {currentView === 'login' && (
+        <div className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-50">
+          <style>{`
+            @keyframes movingGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+            .btn-animated { background: linear-gradient(270deg, #4f46e5, #9333ea, #ec4899, #4f46e5); background-size: 300% 300%; animation: movingGradient 4s ease infinite; }
+            .btn-animated:hover { animation: movingGradient 1.5s ease infinite; box-shadow: 0 0 25px rgba(147, 51, 234, 0.6); }
+            @keyframes blobBounce { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
+            .blob { animation: blobBounce 8s infinite ease-in-out; }
+          `}</style>
+
+          <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob"></div>
+          <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob" style={{ animationDelay: '4s' }}></div>
+
+          <div className="relative z-10 max-w-md w-full mx-4 bg-white/70 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] border border-white/60 p-8 md:p-10 transform transition-all">
+            <div className="text-center mb-10">
+              <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 mb-3 tracking-tight">
+                Dashboard
+              </h1>
+              <p className="text-xs md:text-sm font-bold text-indigo-700 bg-indigo-50/80 inline-block px-5 py-2 rounded-full uppercase tracking-widest shadow-sm border border-indigo-100">
+                Multi Sistem Manajemen Hotel
+              </p>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="relative">
+                <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Username</label>
+                <div className="relative flex items-center">
+                  <User className="absolute left-4 w-5 h-5 text-gray-400" />
+                  <input 
+                    type="text" required
+                    className="w-full pl-12 pr-4 py-4 bg-white/80 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none text-gray-800 font-medium shadow-sm"
+                    value={username} onChange={e => setUsername(e.target.value)}
+                    placeholder="Masukkan username..."
+                  />
+                </div>
+              </div>
+              <div className="relative">
+                <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Password</label>
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-4 w-5 h-5 text-gray-400" />
+                  <input 
+                    type="password" required
+                    className="w-full pl-12 pr-4 py-4 bg-white/80 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none text-gray-800 font-medium shadow-sm"
+                    value={password} onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+              <button 
+                type="submit" disabled={isLoading}
+                className="btn-animated w-full mt-8 flex justify-center items-center space-x-2 text-white p-4 rounded-2xl font-black text-lg shadow-[0_8px_20px_rgba(79,70,229,0.3)] transform hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed border border-white/20"
+              >
+                {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : <span>Masuk ke Sistem</span>}
+              </button>
+            </form>
+            <div className="mt-10 text-center border-t border-gray-200/50 pt-6">
+              <p className="text-sm text-gray-500 font-medium">Belum memiliki akun staf?</p>
+              <button onClick={() => setCurrentView('register')} className="mt-2 text-indigo-600 font-black hover:text-pink-600 transition-colors uppercase tracking-wide text-sm flex items-center justify-center mx-auto space-x-1">
+                <span>Daftar Akun Baru</span> <ArrowLeft className="w-4 h-4 rotate-180" />
+              </button>
+            </div>
+          </div>
+          <Footer />
+        </div>
+      )}
+
+      {currentView === 'register' && (
+        <div className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-50">
+          <style>{`
+            @keyframes movingGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+            .btn-animated { background: linear-gradient(270deg, #ec4899, #9333ea, #4f46e5, #ec4899); background-size: 300% 300%; animation: movingGradient 4s ease infinite; }
+            .btn-animated:hover { animation: movingGradient 1.5s ease infinite; box-shadow: 0 0 25px rgba(236, 72, 153, 0.6); }
+            .blob { animation: blobBounce 8s infinite ease-in-out; }
+            @keyframes blobBounce { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
+          `}</style>
+          
+          <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob"></div>
+          <div className="absolute bottom-[20%] left-[-10%] w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 blob" style={{ animationDelay: '2s' }}></div>
+
+          <div className="relative z-10 max-w-md w-full mx-4 bg-white/70 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] border border-white/60 p-8 md:p-10">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-pink-600 mb-2">Pendaftaran</h2>
+              <p className="text-xs md:text-sm font-bold text-indigo-700 bg-indigo-50/80 inline-block px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm border border-indigo-100">
+                Multi Sistem Manajemen Hotel
+              </p>
+            </div>
+            
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Username Baru</label>
+                <div className="relative flex items-center">
+                  <User className="absolute left-4 w-5 h-5 text-gray-400" />
+                  <input 
+                    type="text" required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all outline-none text-gray-800 font-medium"
+                    value={regUsername} onChange={e => setRegUsername(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Password</label>
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-4 w-5 h-5 text-gray-400" />
+                  <input 
+                    type="password" required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all outline-none text-gray-800 font-medium"
+                    value={regPassword} onChange={e => setRegPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Penempatan Hotel</label>
+                <div className="relative flex items-center">
+                  <Building2 className="absolute left-4 w-5 h-5 text-gray-400 pointer-events-none" />
+                  <select 
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all outline-none text-gray-800 font-medium cursor-pointer appearance-none"
+                    value={regHotel} onChange={e => setRegHotel(e.target.value)}
+                  >
+                    {hotelsList.map(h => <option key={h.id} value={h.name}>{h.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <button 
+                type="submit" disabled={isLoading}
+                className="btn-animated w-full mt-6 flex justify-center items-center space-x-2 text-white p-4 rounded-xl font-black shadow-[0_8px_20px_rgba(236,72,153,0.3)] transform hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed border border-white/20"
+              >
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <span>Kirim Permintaan Akses</span>}
+              </button>
+            </form>
+            <div className="mt-8 text-center border-t border-gray-200/50 pt-6">
+              <button onClick={() => setCurrentView('login')} className="flex items-center justify-center space-x-1.5 text-sm font-bold text-gray-500 hover:text-indigo-600 mx-auto transition-colors">
+                <ArrowLeft className="w-4 h-4" /> <span>Kembali ke Login</span>
+              </button>
+            </div>
+          </div>
+          <Footer />
+        </div>
+      )}
+
       {currentView === 'admin' && (
         <AdminDashboard 
           currentUser={currentUser} 
@@ -1031,7 +817,16 @@ export default function App() {
           showNotif={showNotif} 
         />
       )}
-      {currentView === 'hotelSelection' && renderHotelSelection()}
+      
+      {currentView === 'hotelSelection' && (
+        <HotelSelectionDashboard 
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+          setCurrentView={setCurrentView}
+          setSelectedHotel={setSelectedHotel}
+        />
+      )}
+
       {currentView === 'schedule' && (
         <ScheduleDashboard 
           selectedHotel={selectedHotel} 
