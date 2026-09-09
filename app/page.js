@@ -18,7 +18,8 @@ const employees = {
     { id: 10, name: '-', department: 'Laundry', code: 'LD' },
     { id: 11, name: 'Alit', department: 'Receptionist', code: 'FO' },
     { id: 12, name: 'Billa', department: 'Receptionist', code: 'FO' },
-    { id: 13, name: 'Randa', department: 'Receptionist', code: 'FO' }
+    { id: 13, name: 'Randa', department: 'Receptionist', code: 'FO' },
+    { id: 14, name: 'Andini', department: 'Receptionist', code: 'FO' }
   ],
   'Hotel Harmony': [
     { id: 12, name: 'Budi (Cabang)', department: 'Housekeeping', code: 'HK' },
