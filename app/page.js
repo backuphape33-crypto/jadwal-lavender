@@ -628,9 +628,10 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNot
                 </div>
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-teal-600">
                   <div className="font-black text-teal-600 mb-1.5 text-[10px] md:text-xs uppercase tracking-widest">General</div>
-                  <div className="text-gray-500 text-[10px] md:text-xs font-bold">GEN: 08:00 - 20:00</div>
+                  <div className="text-gray-500 text-[10px] md:text-xs font-bold">
                   <span>GEN1: 07:00 - 19:00</span>
                   <span>GEN2: 19:00 - 07:00</span>
+                  </div>
                 </div>
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-blue-600">
                   <div className="font-black text-blue-600 mb-1.5 text-[10px] md:text-xs uppercase tracking-widest">Receptionist</div>
