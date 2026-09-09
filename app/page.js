@@ -12,11 +12,14 @@ const employees = {
     { id: 4, name: 'Andre', department: 'Housekeeping', code: 'HK' },
     { id: 5, name: 'Fahmi', department: 'Housekeeping', code: 'HK' },
     { id: 6, name: 'Ady', department: 'Housekeeping', code: 'HK' },
-    { id: 7, name: 'Salman', department: 'General', code: 'GA' },
-    { id: 8, name: 'Indah', department: 'Laundry', code: 'LD' },
-    { id: 9, name: 'Alit', department: 'Receptionist', code: 'FO' },
-    { id: 10, name: 'Billa', department: 'Receptionist', code: 'FO' },
-    { id: 11, name: 'Tabhita', department: 'Receptionist', code: 'FO' }
+    { id: 7, name: 'Fadlan', department: 'Housekeeping', code: 'HK' },
+    { id: 8, name: 'Saeful', department: 'Housekeeping', code: 'HK' },
+    { id: 9, name: 'Salman', department: 'General', code: 'GA' },
+    { id: 9, name: 'Yadi', department: 'General', code: 'GA' },
+    { id: 10, name: '-', department: 'Laundry', code: 'LD' },
+    { id: 11, name: 'Alit', department: 'Receptionist', code: 'FO' },
+    { id: 12, name: 'Billa', department: 'Receptionist', code: 'FO' },
+    { id: 13, name: 'Randa', department: 'Receptionist', code: 'FO' }
   ],
   'Hotel Harmony': [
     { id: 12, name: 'Budi (Cabang)', department: 'Housekeeping', code: 'HK' },
@@ -44,7 +47,8 @@ const hotelsList = [
 const shiftOptions = [
   { id: 'HK1', label: 'HK (07-17)', color: 'bg-orange-500 text-white' },
   { id: 'LD1', label: 'LD (07-17)', color: 'bg-pink-500 text-white' },
-  { id: 'GEN', label: 'GEN (08-20)', color: 'bg-teal-600 text-white' },
+  { id: 'GEN1', label: 'GEN1 (07-19)', color: 'bg-teal-600 text-white' },
+  { id: 'GEN2', label: 'GEN (19-07)', color: 'bg-teal-600 text-white' },
   { id: 'RC1', label: 'RC (07-15)', color: 'bg-blue-600 text-white' },
   { id: 'RC2', label: 'RC (15-23)', color: 'bg-blue-600 text-white' },
   { id: 'RC3', label: 'RC (23-07)', color: 'bg-blue-600 text-white' },
@@ -625,6 +629,8 @@ const ScheduleDashboard = ({ selectedHotel, currentUser, setCurrentView, showNot
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-teal-600">
                   <div className="font-black text-teal-600 mb-1.5 text-[10px] md:text-xs uppercase tracking-widest">General</div>
                   <div className="text-gray-500 text-[10px] md:text-xs font-bold">GEN: 08:00 - 20:00</div>
+                  <span>GEN1: 07:00 - 19:00</span>
+                  <span>GEN2: 19:00 - 07:00</span>
                 </div>
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-blue-600">
                   <div className="font-black text-blue-600 mb-1.5 text-[10px] md:text-xs uppercase tracking-widest">Receptionist</div>
